@@ -66,7 +66,6 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
       billingPeriodNum++;
 
       // If customer cancelled their subscription send notification email
-      // Otherwise bill the customer and send billing notification
       if (subscriptionCancelled) {
         activities.sendCancellationEmailDuringActiveSubscription(customerId);
 
