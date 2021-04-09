@@ -45,7 +45,7 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
     activities.sendWelcomeEmail(customerId);
 
     // Start the free trial period. User can still cancel subscription during this time
-    Workflow.await(trialPeriod, () -> subscriptionCancelled == true);
+    Workflow.await(trialPeriod, () -> subscriptionCancelled);
 
     // If customer cancelled their subscription during trial period, send notification email
     if (subscriptionCancelled) {
@@ -62,7 +62,7 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
 
       // Wait 1 billing period to charge customer again or if they cancel subscription
       // whichever comes first
-      Workflow.await(billingPeriod, () -> subscriptionCancelled == true);
+      Workflow.await(billingPeriod, () -> subscriptionCancelled);
       billingPeriodNum++;
 
       // If customer cancelled their subscription send notification email
