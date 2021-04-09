@@ -19,36 +19,49 @@
 
 package io.temporal.sample.activities;
 
+import io.temporal.sample.model.Customer;
+
 public class SubscriptionActivitiesImpl implements SubscriptionActivities {
   @Override
-  public boolean sendWelcomeEmail(String customerId) {
-    System.out.println("** SubscriptionActivities ** sending welcome email to : " + customerId);
+  public boolean sendWelcomeEmail(Customer customer) {
+    System.out.println(
+        "** SubscriptionActivities ** sending welcome email to : " + customer.toString());
     return true;
   }
 
   @Override
-  public boolean sendCancellationEmailDuringTrialPeriod(String customerId) {
+  public boolean sendCancellationEmailDuringTrialPeriod(Customer customer) {
     System.out.println(
         "** SubscriptionActivities ** sending cancellation email during trial period to : "
-            + customerId);
+            + customer.toString());
     return true;
   }
 
   @Override
-  public boolean chargeCustomerForBillingPeriod(String customerId, int billingPeriodNum) {
+  public boolean chargeCustomerForBillingPeriod(Customer customer, int billingPeriodNum) {
     System.out.println(
         "** SubscriptionActivities ** performing billing for customer: "
-            + customerId
+            + customer.toString()
             + " and billing period: "
-            + billingPeriodNum);
+            + billingPeriodNum
+            + " and amount: "
+            + customer.getSubscription().getBillingPeriodCharge());
     return true;
   }
 
   @Override
-  public boolean sendCancellationEmailDuringActiveSubscription(String customerId) {
+  public boolean sendCancellationEmailDuringActiveSubscription(Customer customer) {
     System.out.println(
         "** SubscriptionActivities ** sending cancellation email during active subscription period to : "
-            + customerId);
+            + customer.toString());
+    return true;
+  }
+
+  @Override
+  public boolean sendSubscriptionOverEmail(Customer customer) {
+    System.out.println(
+        "** SubscriptionActivities ** sending subscription is over email to : "
+            + customer.toString());
     return true;
   }
 }

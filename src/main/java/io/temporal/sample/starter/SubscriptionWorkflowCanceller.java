@@ -17,21 +17,9 @@
  *  permissions and limitations under the License.
  */
 
-package io.temporal.sample.activities;
+package io.temporal.sample.starter;
 
-import io.temporal.activity.ActivityInterface;
-import io.temporal.sample.model.Customer;
-
-/** Subscription activity interface */
-@ActivityInterface
-public interface SubscriptionActivities {
-  boolean sendWelcomeEmail(Customer customer);
-
-  boolean sendCancellationEmailDuringTrialPeriod(Customer customer);
-
-  boolean chargeCustomerForBillingPeriod(Customer customer, int billingPeriodNum);
-
-  boolean sendCancellationEmailDuringActiveSubscription(Customer customer);
-
-  boolean sendSubscriptionOverEmail(Customer customer);
+// Can be used to cancel subscription workflows
+public class SubscriptionWorkflowCanceller {
+  public static void main(String[] args) {}
 }

@@ -19,40 +19,56 @@
 
 package io.temporal.sample.starter;
 
-import static io.temporal.sample.workflow.SubscriptionWorkflowImpl.TASK_QUEUE;
-import static io.temporal.sample.workflow.SubscriptionWorkflowImpl.WORKFLOW_ID;
-
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.sample.activities.SubscriptionActivitiesImpl;
+import io.temporal.sample.model.Customer;
+import io.temporal.sample.model.Subscription;
 import io.temporal.sample.workflow.SubscriptionWorkflow;
 import io.temporal.sample.workflow.SubscriptionWorkflowImpl;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /** Subscription workflow starter */
 public class SubscriptionWorkflowStarter {
 
+  // Task queue name
+  public static final String TASK_QUEUE = "SubscriptionsTaskQueue";
+  // Base id for all subscription workflow
+  public static final String WORKFLOW_ID_BASE = "SubscriptionsWorkflow";
+
+  /*
+   * Define the workflow service. It is a gRPC stubs wrapper which talks to the docker instance of
+   * our locally running Temporal service.
+   * Defined here as reused by other starters
+   */
+  public static WorkflowServiceStubs SERVICE = WorkflowServiceStubs.newInstance();
+
+  /*
+   * Define the workflow client. It is a Temporal service client used to start, signal, and query
+   * workflows
+   */
+  public static WorkflowClient CLIENT = WorkflowClient.newInstance(SERVICE);
+
+  /*
+   * Define our Subscription
+   * Let's say we have a trial period of 5 seconds and a billing period of 10 seconds
+   * In real life this would be much longer
+   */
+  public static Subscription subscription =
+      new Subscription(Duration.ofSeconds(5), Duration.ofSeconds(10), 12, 120);
+
   public static void main(String[] args) {
-
-    /*
-     * Define the workflow service. It is a gRPC stubs wrapper which talks to the docker instance of
-     * our locally running Temporal service.
-     */
-    WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();
-
-    /*
-     * Define the workflow client. It is a Temporal service client used to start, signal, and query
-     * workflows
-     */
-    WorkflowClient client = WorkflowClient.newInstance(service);
 
     /*
      * Define the workflow factory. It is used to create workflow workers for a specific task queue.
      */
-    WorkerFactory factory = WorkerFactory.newInstance(client);
+    WorkerFactory factory = WorkerFactory.newInstance(CLIENT);
 
     /*
      * Define the workflow worker. Workflow workers listen to a defined task queue and process
@@ -75,41 +91,34 @@ public class SubscriptionWorkflowStarter {
     // Start all the workers registered for a specific task queue.
     factory.start();
 
-    // Create our workflow client stub. It is used to start our workflow execution.
-    // For sake of the example we set the total workflow run timeout to 5 minutes
-    SubscriptionWorkflow workflow =
-        client.newWorkflowStub(
-            SubscriptionWorkflow.class,
-            WorkflowOptions.newBuilder()
-                .setWorkflowId(WORKFLOW_ID)
-                .setTaskQueue(TASK_QUEUE)
-                .setWorkflowRunTimeout(Duration.ofMinutes(5))
-                .build());
+    // List of our example customers
+    List<Customer> customers = new ArrayList<>();
 
-    /*
-     * Start executing our workflow
-     * Let's say we have a trial period of 5 seconds and a billing period of 10 seconds
-     * In real life this would be much longer
-     */
-    Duration trialPeriod = Duration.ofSeconds(5);
-    Duration billingPeriod = Duration.ofSeconds(10);
+    IntStream.range(0, 1)
+        .forEach(
+            i -> {
+              Customer customer =
+                  new Customer(
+                      "First Name" + i, "Last Name" + i, "Id-" + i, "Email" + i, subscription);
+              customers.add(customer);
+            });
 
-    // Our new customer id
-    String customerId = "newCustomer123";
+    customers.forEach(
+        customer -> {
+          // Create our workflow client stub. It is used to start our workflow execution.
+          // For sake of the example we set the total workflow run timeout to 2 minutes
+          SubscriptionWorkflow workflow =
+              CLIENT.newWorkflowStub(
+                  SubscriptionWorkflow.class,
+                  WorkflowOptions.newBuilder()
+                      .setWorkflowId(WORKFLOW_ID_BASE + customer.getId())
+                      .setTaskQueue(TASK_QUEUE)
+                      .setWorkflowRunTimeout(Duration.ofMinutes(2))
+                      .build());
 
-    // Start workflow execution (async to not use another thread to signal)
-    WorkflowClient.start(workflow::startSubscription, customerId, trialPeriod, billingPeriod);
-
-    // After 1 minute send a cancellation signal
-    try {
-      Thread.sleep(60 * 1000);
-      workflow.cancelSubscription();
-
-      // wait to see workflow activity cancel message..for sake of example
-      Thread.sleep(3 * 1000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+          // Start workflow execution (async)
+          WorkflowClient.start(workflow::startSubscription, customer);
+        });
 
     // Exit
     System.exit(0);

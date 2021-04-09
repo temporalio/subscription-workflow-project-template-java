@@ -19,17 +19,27 @@
 
 package io.temporal.sample.workflow;
 
+import io.temporal.sample.model.Customer;
+import io.temporal.workflow.QueryMethod;
 import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
-import java.time.Duration;
 
 /** Subscription workflow interface */
 @WorkflowInterface
 public interface SubscriptionWorkflow {
   @WorkflowMethod
-  void startSubscription(String customerId, Duration trialPeriod, Duration billingPeriod);
+  void startSubscription(Customer customer);
 
   @SignalMethod
   void cancelSubscription();
+
+  @SignalMethod
+  void updateBillingPeriodChargeAmount(int billingPeriodChargeAmount);
+
+  @QueryMethod
+  int queryBillingPeriodNumber();
+
+  @QueryMethod
+  int queryBillingPeriodChargeAmount();
 }
