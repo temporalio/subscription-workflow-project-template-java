@@ -1,0 +1,83 @@
+// Run 'gradle checkUpdates' to find out which dependencies have newer versions
+
+plugins {
+    id 'net.minecrell.licenser' version '0.4.1'
+    id 'com.github.sherter.google-java-format' version '0.9'
+    id "net.ltgt.errorprone" version "1.3.0"
+    id 'name.remal.check-updates' version '1.1.4'
+}
+
+apply plugin: 'java'
+apply plugin: 'com.github.sherter.google-java-format'
+
+googleJavaFormat {
+    toolVersion '1.7'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'io.temporal', name: 'temporal-sdk', version: '1.0.6'
+    implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    testImplementation group: 'io.temporal', name: 'temporal-testing', version: '1.0.6'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testImplementation group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
+
+    errorproneJavac("com.google.errorprone:javac:9+181-r4173-1")
+    errorprone("com.google.errorprone:error_prone_core:2.4.0")
+}
+
+compileJava {
+    dependsOn 'googleJavaFormat'
+}
+
+task execute(type: JavaExec) {
+    main = findProperty("mainClass") ?: ""
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+license {
+    header rootProject.file('license-header.txt')
+}
+
+// Executes most of the hello workflows as a sanity check
+//task runHello {
+//    doLast {
+//        // Cron and Periodic are not in the list as they take long time to stop
+//        ["io.temporal.samples.hello.HelloActivity",
+//         "io.temporal.samples.hello.HelloActivityRetry",
+//         "io.temporal.samples.hello.HelloAsync",
+//         "io.temporal.samples.hello.HelloAsyncActivityCompletion",
+//         "io.temporal.samples.hello.HelloAsyncLambda",
+//         "io.temporal.samples.hello.HelloChild",
+//         "io.temporal.samples.hello.HelloException",
+//         "io.temporal.samples.hello.HelloPolymorphicActivity",
+//         "io.temporal.samples.hello.HelloQuery",
+//         "io.temporal.samples.hello.HelloSaga",
+//         "io.temporal.samples.hello.HelloSearchAttributes",
+//         "io.temporal.samples.hello.HelloSignal"
+//        ].each { mainClass ->
+//            println mainClass
+//            javaexec {
+//                classpath = sourceSets.main.runtimeClasspath
+//                main = mainClass
+//            }
+//        }
+//    }
+//}
