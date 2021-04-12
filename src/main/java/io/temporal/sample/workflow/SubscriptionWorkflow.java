@@ -38,8 +38,11 @@ public interface SubscriptionWorkflow {
   void updateBillingPeriodChargeAmount(int billingPeriodChargeAmount);
 
   @QueryMethod
-  int queryBillingPeriodNumber();
+  String queryCustomerId();
 
   @QueryMethod
-  int queryBillingPeriodChargeAmount();
+  Integer queryBillingPeriodNumber();
+
+  @QueryMethod
+  Integer queryBillingPeriodChargeAmount();
 }

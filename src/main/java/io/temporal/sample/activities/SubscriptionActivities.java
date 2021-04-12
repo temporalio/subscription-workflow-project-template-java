@@ -25,13 +25,13 @@ import io.temporal.sample.model.Customer;
 /** Subscription activity interface */
 @ActivityInterface
 public interface SubscriptionActivities {
-  boolean sendWelcomeEmail(Customer customer);
+  void sendWelcomeEmail(Customer customer);
 
-  boolean sendCancellationEmailDuringTrialPeriod(Customer customer);
+  void sendCancellationEmailDuringTrialPeriod(Customer customer);
 
-  boolean chargeCustomerForBillingPeriod(Customer customer, int billingPeriodNum);
+  void chargeCustomerForBillingPeriod(Customer customer, int billingPeriodNum);
 
-  boolean sendCancellationEmailDuringActiveSubscription(Customer customer);
+  void sendCancellationEmailDuringActiveSubscription(Customer customer);
 
-  boolean sendSubscriptionOverEmail(Customer customer);
+  void sendSubscriptionOverEmail(Customer customer);
 }

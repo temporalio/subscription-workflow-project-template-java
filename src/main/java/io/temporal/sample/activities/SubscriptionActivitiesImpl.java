@@ -23,45 +23,41 @@ import io.temporal.sample.model.Customer;
 
 public class SubscriptionActivitiesImpl implements SubscriptionActivities {
   @Override
-  public boolean sendWelcomeEmail(Customer customer) {
-    System.out.println(
-        "** SubscriptionActivities ** sending welcome email to : " + customer.toString());
-    return true;
+  public void sendWelcomeEmail(Customer customer) {
+    //    System.out.println(
+    //        "** SubscriptionActivities ** sending welcome email to : " + customer.toString());
   }
 
   @Override
-  public boolean sendCancellationEmailDuringTrialPeriod(Customer customer) {
-    System.out.println(
-        "** SubscriptionActivities ** sending cancellation email during trial period to : "
-            + customer.toString());
-    return true;
+  public void sendCancellationEmailDuringTrialPeriod(Customer customer) {
+    //    System.out.println(
+    //        "** SubscriptionActivities ** sending cancellation email during trial period to : "
+    //            + customer.toString());
   }
 
   @Override
-  public boolean chargeCustomerForBillingPeriod(Customer customer, int billingPeriodNum) {
-    System.out.println(
-        "** SubscriptionActivities ** performing billing for customer: "
-            + customer.toString()
-            + " and billing period: "
-            + billingPeriodNum
-            + " and amount: "
-            + customer.getSubscription().getBillingPeriodCharge());
-    return true;
+  public void chargeCustomerForBillingPeriod(Customer customer, int billingPeriodNum) {
+    //    System.out.println(
+    //        "** SubscriptionActivities ** performing billing for customer: "
+    //            + customer.toString()
+    //            + " and billing period: "
+    //            + billingPeriodNum
+    //            + " and amount: "
+    //            + customer.getSubscription().getBillingPeriodCharge());
   }
 
   @Override
-  public boolean sendCancellationEmailDuringActiveSubscription(Customer customer) {
-    System.out.println(
-        "** SubscriptionActivities ** sending cancellation email during active subscription period to : "
-            + customer.toString());
-    return true;
+  public void sendCancellationEmailDuringActiveSubscription(Customer customer) {
+    //    System.out.println(
+    //        "** SubscriptionActivities ** sending cancellation email during active subscription
+    // period to : "
+    //            + customer.toString());
   }
 
   @Override
-  public boolean sendSubscriptionOverEmail(Customer customer) {
-    System.out.println(
-        "** SubscriptionActivities ** sending subscription is over email to : "
-            + customer.toString());
-    return true;
+  public void sendSubscriptionOverEmail(Customer customer) {
+    //    System.out.println(
+    //        "** SubscriptionActivities ** sending subscription is over email to : "
+    //            + customer.toString());
   }
 }

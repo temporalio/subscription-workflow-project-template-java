@@ -35,13 +35,9 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
   /*
    * Define our activity options:
    * setStartToCloseTimeout: maximum activity execution time after it was sent to a worker
-   * setScheduleToStartTimeout: the time an activity can stay in task queue before it is picked up by a worker
    */
   private final ActivityOptions activityOptions =
-      ActivityOptions.newBuilder()
-          .setStartToCloseTimeout(Duration.ofSeconds(5))
-          .setScheduleToStartTimeout(Duration.ofHours(1))
-          .build();
+      ActivityOptions.newBuilder().setStartToCloseTimeout(Duration.ofSeconds(5)).build();
 
   // Define subscription activities stub
   private final SubscriptionActivities activities =
@@ -49,7 +45,7 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
 
   @Override
   public void startSubscription(Customer customer) {
-    // get the billing period charge amount from customer subscription
+    // Set the workflow customer
     this.customer = customer;
 
     // Send welcome email to customer
@@ -91,8 +87,10 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
     }
 
     // if we get here the subscription period is over
-    // notify the customer to subscribe again
-    activities.sendSubscriptionOverEmail(customer);
+    // notify the customer to buy a new subscription
+    if (!subscriptionCancelled) {
+      activities.sendSubscriptionOverEmail(customer);
+    }
   }
 
   @Override
@@ -106,12 +104,17 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
   }
 
   @Override
-  public int queryBillingPeriodNumber() {
+  public String queryCustomerId() {
+    return customer.getId();
+  }
+
+  @Override
+  public Integer queryBillingPeriodNumber() {
     return billingPeriodNum;
   }
 
   @Override
-  public int queryBillingPeriodChargeAmount() {
+  public Integer queryBillingPeriodChargeAmount() {
     return customer.getSubscription().getBillingPeriodCharge();
   }
 }

@@ -26,6 +26,7 @@ public class Customer {
   private String email;
   private Subscription subscription;
 
+  // Default constructor needed for serialization
   public Customer() {}
 
   public Customer(String firstName, String lastName, String id, String email) {
