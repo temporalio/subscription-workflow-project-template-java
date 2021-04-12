@@ -21,63 +21,100 @@ package io.temporal.sample.workflow;
 
 import io.temporal.activity.ActivityOptions;
 import io.temporal.sample.activities.SubscriptionActivities;
+import io.temporal.sample.model.Customer;
 import io.temporal.workflow.Workflow;
 import java.time.Duration;
 
 /** Subscription workflow implementation. Note this is just a POJO. */
 public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
-  public static final String TASK_QUEUE = "SubscriptionsTaskQueue";
-  public static final String WORKFLOW_ID = "SubscriptionsWorkflow";
 
-  private int billingPeriodNum = 0;
-  private boolean subscriptionCancelled = false;
+  private int billingPeriodNum;
+  private boolean subscriptionCancelled;
+  private Customer customer;
+
+  /*
+   * Define our activity options:
+   * setStartToCloseTimeout: maximum activity execution time after it was sent to a worker
+   */
+  private final ActivityOptions activityOptions =
+      ActivityOptions.newBuilder().setStartToCloseTimeout(Duration.ofSeconds(5)).build();
 
   // Define subscription activities stub
-  // setScheduleToCloseTimeout defines a timeout for an activity to complete
   private final SubscriptionActivities activities =
-      Workflow.newActivityStub(
-          SubscriptionActivities.class,
-          ActivityOptions.newBuilder().setScheduleToCloseTimeout(Duration.ofSeconds(5)).build());
+      Workflow.newActivityStub(SubscriptionActivities.class, activityOptions);
 
   @Override
-  public void startSubscription(String customerId, Duration trialPeriod, Duration billingPeriod) {
+  public void startSubscription(Customer customer) {
+    // Set the workflow customer
+    this.customer = customer;
+
     // Send welcome email to customer
-    activities.sendWelcomeEmail(customerId);
+    activities.sendWelcomeEmail(customer);
 
     // Start the free trial period. User can still cancel subscription during this time
-    Workflow.await(trialPeriod, () -> subscriptionCancelled);
+    Workflow.await(customer.getSubscription().getTrialPeriod(), () -> subscriptionCancelled);
 
     // If customer cancelled their subscription during trial period, send notification email
     if (subscriptionCancelled) {
-      activities.sendCancellationEmailDuringTrialPeriod(customerId);
+      activities.sendCancellationEmailDuringTrialPeriod(customer);
       // We have completed subscription for this customer.
       // Finishing workflow execution
       return;
     }
 
-    // Trial period is over, start billing until cancelled
-    while (true) {
-      // Charge customer for the billing period
-      activities.chargeCustomerForBillingPeriod(customerId, billingPeriodNum);
+    // Trial period is over, start billing until
+    // we reach the max billing periods for the subscription
+    // or sub has been cancelled
+    while (billingPeriodNum < customer.getSubscription().getMaxBillingPeriods()) {
 
-      // Wait 1 billing period to charge customer again or if they cancel subscription
+      // Charge customer for the billing period
+      activities.chargeCustomerForBillingPeriod(customer, billingPeriodNum);
+
+      // Wait 1 billing period to charge customer or if they cancel subscription
       // whichever comes first
-      Workflow.await(billingPeriod, () -> subscriptionCancelled);
-      billingPeriodNum++;
+      Workflow.await(customer.getSubscription().getBillingPeriod(), () -> subscriptionCancelled);
 
       // If customer cancelled their subscription send notification email
       if (subscriptionCancelled) {
-        activities.sendCancellationEmailDuringActiveSubscription(customerId);
+        activities.sendCancellationEmailDuringActiveSubscription(customer);
 
         // We have completed subscription for this customer.
         // Finishing workflow execution
         break;
       }
+
+      billingPeriodNum++;
+    }
+
+    // if we get here the subscription period is over
+    // notify the customer to buy a new subscription
+    if (!subscriptionCancelled) {
+      activities.sendSubscriptionOverEmail(customer);
     }
   }
 
   @Override
   public void cancelSubscription() {
     subscriptionCancelled = true;
+  }
+
+  @Override
+  public void updateBillingPeriodChargeAmount(int billingPeriodChargeAmount) {
+    customer.getSubscription().setBillingPeriodCharge(billingPeriodChargeAmount);
+  }
+
+  @Override
+  public String queryCustomerId() {
+    return customer.getId();
+  }
+
+  @Override
+  public Integer queryBillingPeriodNumber() {
+    return billingPeriodNum;
+  }
+
+  @Override
+  public Integer queryBillingPeriodChargeAmount() {
+    return customer.getSubscription().getBillingPeriodCharge();
   }
 }
