@@ -16,12 +16,12 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
+
 package io.temporal.sample.starter;
 
 import io.temporal.client.WorkflowClient;
-import io.temporal.client.WorkflowStub;
+import io.temporal.sample.workflow.SubscriptionWorkflow;
 import io.temporal.serviceclient.WorkflowServiceStubs;
-import java.util.Optional;
 
 // Allows you to query billing information for an existing customer
 public class SubscriptionWorkflowQuerier {
@@ -44,23 +44,19 @@ public class SubscriptionWorkflowQuerier {
     // Passed in customer id
     String customerId = args[0];
 
-    // Create a workflow stub for existing workflow execution by the customer id
-    WorkflowStub workflowStub =
-        client.newUntypedWorkflowStub(
-            SubscriptionWorkflowStarter.WORKFLOW_ID_BASE + customerId,
-            Optional.empty(),
-            Optional.empty());
+    // Create a stub that points to an existing subscription workflow with the given ID
+    SubscriptionWorkflow workflow =
+        client.newWorkflowStub(
+            SubscriptionWorkflow.class, SubscriptionWorkflowStarter.WORKFLOW_ID_BASE + customerId);
 
     // Print the customer billing info (from workflow query methods)
-    printCustomerBillingInfo(workflowStub);
+    printCustomerBillingInfo(workflow);
   }
 
-  private static void printCustomerBillingInfo(WorkflowStub workflowStub) {
+  private static void printCustomerBillingInfo(SubscriptionWorkflow workflow) {
     System.out.println("*****************");
-    System.out.println("Customer Id: " + workflowStub.query("queryCustomerId", Integer.class));
-    System.out.println(
-        "Billing Period #: " + workflowStub.query("queryBillingPeriodNumber", Integer.class));
-    System.out.println(
-        "Charge Amount: " + workflowStub.query("queryBillingPeriodChargeAmount", Integer.class));
+    System.out.println("Customer Id: " + workflow.queryCustomerId());
+    System.out.println("Billing Period #: " + workflow.queryBillingPeriodNumber());
+    System.out.println("Charge Amount: " + workflow.queryBillingPeriodChargeAmount());
   }
 }
