@@ -28,9 +28,9 @@ import java.time.Duration;
 /** Subscription workflow implementation. Note this is just a POJO. */
 public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
 
-  private int billingPeriodNum;
-  private boolean subscriptionCancelled;
-  private Customer customer;
+  int billingPeriodNum;
+  boolean subscriptionCancelled;
+  Customer customer;
 
   /*
    * Define our activity options:

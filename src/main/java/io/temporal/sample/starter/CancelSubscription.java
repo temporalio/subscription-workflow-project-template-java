@@ -23,8 +23,8 @@ import io.temporal.client.WorkflowClient;
 import io.temporal.sample.workflow.SubscriptionWorkflow;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 
-// Allows you to query billing information for an existing customer
-public class SubscriptionWorkflowQuerier {
+// Can be used to cancel a subscription for a specific customer
+public class CancelSubscription {
 
   public static void main(String[] args) {
 
@@ -49,14 +49,7 @@ public class SubscriptionWorkflowQuerier {
         client.newWorkflowStub(
             SubscriptionWorkflow.class, SubscriptionWorkflowStarter.WORKFLOW_ID_BASE + customerId);
 
-    // Print the customer billing info (from workflow query methods)
-    printCustomerBillingInfo(workflow);
-  }
-
-  private static void printCustomerBillingInfo(SubscriptionWorkflow workflow) {
-    System.out.println("*****************");
-    System.out.println("Customer Id: " + workflow.queryCustomerId());
-    System.out.println("Billing Period #: " + workflow.queryBillingPeriodNumber());
-    System.out.println("Charge Amount: " + workflow.queryBillingPeriodChargeAmount());
+    System.out.println("Cancelling subscription for customer: " + customerId);
+    workflow.cancelSubscription();
   }
 }
