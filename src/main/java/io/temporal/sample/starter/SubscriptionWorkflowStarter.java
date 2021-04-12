@@ -129,39 +129,39 @@ public class SubscriptionWorkflowStarter {
 
     // Show how you can query a running workflow by just its id
     // Wait 7 seconds then query the "Id-0" customer
-    try {
-      Thread.sleep(10 * 1000);
-
-      SubscriptionWorkflow subWorkflowForFirstCustomer =
-          client.newWorkflowStub(
-              SubscriptionWorkflow.class, WORKFLOW_ID_BASE + customers.get(0).getId());
-
-      printCustomerBillingInfo(subWorkflowForFirstCustomer);
-
-      // Change the billing period charge for this customer to 200
-      // This calls the workflow signal method
-      subWorkflowForFirstCustomer.updateBillingPeriodChargeAmount(200);
-
-      // Lets sleep again and see if the billing period charge has updated for this customer
-      Thread.sleep(5 * 1000);
-
-      printCustomerBillingInfo(subWorkflowForFirstCustomer);
-
-      // Let's signal our workflow that the subscription for customer is cancelled
-      subWorkflowForFirstCustomer.cancelSubscription();
-
-      Thread.sleep(5 * 1000);
-      // The workflow execution status should be "COMPLETED" now
-      System.out.println("*****************");
-      System.out.println(
-          "Workflow status: "
-              + getWorkflowExecutionStatus(
-                      WORKFLOW_ID_BASE + customers.get(0).getId(), service, client)
-                  .name());
-
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    //    try {
+    //      Thread.sleep(10 * 1000);
+    //
+    //      SubscriptionWorkflow subWorkflowForFirstCustomer =
+    //          client.newWorkflowStub(
+    //              SubscriptionWorkflow.class, WORKFLOW_ID_BASE + customers.get(0).getId());
+    //
+    //      printCustomerBillingInfo(subWorkflowForFirstCustomer);
+    //
+    //      // Change the billing period charge for this customer to 200
+    //      // This calls the workflow signal method
+    //      subWorkflowForFirstCustomer.updateBillingPeriodChargeAmount(200);
+    //
+    //      // Lets sleep again and see if the billing period charge has updated for this customer
+    //      Thread.sleep(5 * 1000);
+    //
+    //      printCustomerBillingInfo(subWorkflowForFirstCustomer);
+    //
+    //      // Let's signal our workflow that the subscription for customer is cancelled
+    //      subWorkflowForFirstCustomer.cancelSubscription();
+    //
+    //      Thread.sleep(5 * 1000);
+    //      // The workflow execution status should be "COMPLETED" now
+    //      System.out.println("*****************");
+    //      System.out.println(
+    //          "Workflow status: "
+    //              + getWorkflowExecutionStatus(
+    //                      WORKFLOW_ID_BASE + customers.get(0).getId(), service, client)
+    //                  .name());
+    //
+    //    } catch (InterruptedException e) {
+    //      e.printStackTrace();
+    //    }
 
     // Exit
     System.exit(0);
