@@ -25,7 +25,8 @@ import io.temporal.sample.model.Customer;
 import io.temporal.workflow.Workflow;
 import java.time.Duration;
 
-/** Subscription workflow implementation. Note this is just a POJO. */
+// @@@SNIPSTART subscription-workflow-project-template-java-workflow-implementation
+/** Subscription Workflow implementation. Note this is just a POJO. */
 public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
 
   int billingPeriodNum;
@@ -33,19 +34,19 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
   Customer customer;
 
   /*
-   * Define our activity options:
-   * setStartToCloseTimeout: maximum activity execution time after it was sent to a worker
+   * Define our Activity options:
+   * setStartToCloseTimeout: maximum Activity execution time after it was sent to a Worker
    */
   private final ActivityOptions activityOptions =
       ActivityOptions.newBuilder().setStartToCloseTimeout(Duration.ofSeconds(5)).build();
 
-  // Define subscription activities stub
+  // Define subscription Activities stub
   private final SubscriptionActivities activities =
       Workflow.newActivityStub(SubscriptionActivities.class, activityOptions);
 
   @Override
   public void startSubscription(Customer customer) {
-    // Set the workflow customer
+    // Set the Workflow customer
     this.customer = customer;
 
     // Send welcome email to customer
@@ -58,7 +59,7 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
     if (subscriptionCancelled) {
       activities.sendCancellationEmailDuringTrialPeriod(customer);
       // We have completed subscription for this customer.
-      // Finishing workflow execution
+      // Finishing Workflow execution
       return;
     }
 
@@ -79,7 +80,7 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
         activities.sendCancellationEmailDuringActiveSubscription(customer);
 
         // We have completed subscription for this customer.
-        // Finishing workflow execution
+        // Finishing Workflow execution
         break;
       }
 
@@ -118,3 +119,5 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
     return customer.getSubscription().getBillingPeriodCharge();
   }
 }
+
+// @@@SNIPEND
