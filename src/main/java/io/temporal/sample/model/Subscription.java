@@ -16,12 +16,12 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-
+// @@@SNIPSTART subscription-workflow-project-template-java-subscription-model
 package io.temporal.sample.model;
 
 import java.time.Duration;
 
-// The Subscription model
+// The subscription model
 public class Subscription {
   // defines the duration of subscription trial period
   private Duration trialPeriod;
@@ -91,3 +91,4 @@ public class Subscription {
         + '}';
   }
 }
+// @@@SNIPEND
