@@ -1,6 +1,6 @@
 # Temporal Subscription Workflow Template - Java
 
-Temporal customer subscription workflow example. 
+Temporal customer subscription Workflow example. 
 
 ### Setup
 
