@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-
+// @@@SNIPSTART subscription-workflow-project-template-java-update-billing-cycle-charge
 package io.temporal.sample.starter;
 
 import io.temporal.client.WorkflowClient;
@@ -34,8 +34,8 @@ public class UpdateBillingCycleCharge {
     WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();
 
     /*
-     * Define the workflow client. It is a Temporal service client used to start, signal, and query
-     * workflows
+     * Define the Workflow client. It is a Temporal service client used to start, Signal, and Query
+     * Workflows
      */
     WorkflowClient client = WorkflowClient.newInstance(service);
 
@@ -44,7 +44,7 @@ public class UpdateBillingCycleCharge {
     // Passed updated charge amount
     String newCharge = args[1];
 
-    // Create a stub that points to an existing subscription workflow with the given ID
+    // Create a stub that points to an existing subscription Workflow with the given ID
     SubscriptionWorkflow workflow =
         client.newWorkflowStub(
             SubscriptionWorkflow.class, SubscriptionWorkflowStarter.WORKFLOW_ID_BASE + customerId);

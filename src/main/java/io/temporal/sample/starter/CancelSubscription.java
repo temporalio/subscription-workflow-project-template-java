@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-
+// @@@SNIPSTART subscription-workflow-project-template-java-cancel-subscription
 package io.temporal.sample.starter;
 
 import io.temporal.client.WorkflowClient;
@@ -29,22 +29,22 @@ public class CancelSubscription {
   public static void main(String[] args) {
 
     /*
-     * Define the workflow service. It is a gRPC stubs wrapper which talks to the docker instance of
+     * Define the Workflow service. It is a gRPC stubs wrapper which talks to the docker instance of
      * our locally running Temporal service.
      * Defined here as reused by other starters
      */
     WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();
 
     /*
-     * Define the workflow client. It is a Temporal service client used to start, signal, and query
-     * workflows
+     * Define the Workflow client. It is a Temporal service client used to start, Signal, and Query
+     * Workflows
      */
     WorkflowClient client = WorkflowClient.newInstance(service);
 
     // Passed in customer id
     String customerId = args[0];
 
-    // Create a stub that points to an existing subscription workflow with the given ID
+    // Create a stub that points to an existing subscription Workflow with the given ID
     SubscriptionWorkflow workflow =
         client.newWorkflowStub(
             SubscriptionWorkflow.class, SubscriptionWorkflowStarter.WORKFLOW_ID_BASE + customerId);
@@ -53,3 +53,4 @@ public class CancelSubscription {
     workflow.cancelSubscription();
   }
 }
+// @@@SNIPEND

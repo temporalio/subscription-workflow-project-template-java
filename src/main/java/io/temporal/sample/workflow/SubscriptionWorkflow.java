@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-
+// @@@SNIPSTART subscription-workflow-project-template-java-workflow-type-interface
 package io.temporal.sample.workflow;
 
 import io.temporal.sample.model.Customer;
@@ -25,7 +25,7 @@ import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 
-/** Subscription workflow interface */
+/** Subscription Workflow interface */
 @WorkflowInterface
 public interface SubscriptionWorkflow {
   @WorkflowMethod
@@ -46,3 +46,4 @@ public interface SubscriptionWorkflow {
   @QueryMethod
   Integer queryBillingPeriodChargeAmount();
 }
+// @@@SNIPEND

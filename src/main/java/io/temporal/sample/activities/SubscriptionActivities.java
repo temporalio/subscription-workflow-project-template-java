@@ -16,13 +16,13 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-
+// @@@SNIPSTART subscription-workflow-project-template-java-activity-types-interface
 package io.temporal.sample.activities;
 
 import io.temporal.activity.ActivityInterface;
 import io.temporal.sample.model.Customer;
 
-/** Subscription activity interface */
+/** Subscription Activity interface */
 @ActivityInterface
 public interface SubscriptionActivities {
   void sendWelcomeEmail(Customer customer);
@@ -35,3 +35,4 @@ public interface SubscriptionActivities {
 
   void sendSubscriptionOverEmail(Customer customer);
 }
+// @@@SNIPEND
