@@ -1,16 +1,17 @@
-# Temporal Subscription Workflow Template - Java
+<!-- @@@SNIPSTART subscription-java-readme -->
+# Subscription Workflow Project Template in Java
 
-Temporal customer subscription Workflow example. 
+This project template illustrates the design pattern for subscription style business logic.
 
-### Setup
+## Setup
 
-#### Build the example
+Build the project:
 
 ```text
 ./gradlew build
 ```
 
-#### Run Temporal server
+Run the Temporal Server in another terminal:
 
 ```bash
 git clone https://github.com/temporalio/docker-compose.git
@@ -18,15 +19,15 @@ cd docker-compose
 docker-compose up
 ```
 
-#### Start the example
+## Start
 
-To start our customer subscriptions you can do:
+Start the Workflow Executions:
 
 ```text
 ./gradlew -q execute -PmainClass=io.temporal.sample.starter.SubscriptionWorkflowStarter
 ```
 
-This will start subscription workflows for 5 customers with ids:
+This will start Workflow Executions for 5 customers with the following Ids:
 
 ```text
 Id-0
@@ -35,30 +36,32 @@ Id-2
 Id-3
 Id-4
 ```
-##### Querying billing information:
 
-You can query billing information for a specific customer after the workflows have started with:
+## Get billing info
 
-```text
+You can Query the Workflow Executions and get the billing information of a specific customer.
+Pass in an Id of an existing subscription customer (e.g. "Id-0").
+
+```bash
 ./gradlew -q execute -PmainClass=io.temporal.sample.starter.QueryBillingInfo --args="Id-0"
 ```
-Here we pass in an Id of an existing subscription customer such as "Id-0" for example.
 
-##### Update billing cycle cost:
+## Update billing
 
-You can also update the billing cycle cost for a specific customer while the workflow is running:
+You can send a Signal a Workflow Execution to update the billing cycle cost for a specific customer.
+Pass in the customer Id and the amount (e.g. "Id-0 300").
 
-```text
+```bash
 ./gradlew -q execute -PmainClass=io.temporal.sample.starter.UpdateBillingCycleCharge --args="Id-0 300"
 ```
-Here we update the billing cycle cost for customer with id "Id-0" to 300. 
 
-##### Cancel subscription (signal)
+## Cancel subscription
 
-You can cancel a subscription for a specific customer while the workflows are running:
+You can send a Signal to Workflow Execution to cancel the subscription for a specific customer.
+Pass in the customer Id (e.g. "Id-0").
 
-```text
+```bash
 ./gradlew -q execute -PmainClass=io.temporal.sample.starter.CancelSubscription --args="Id-0"
 ```
 
-Here we cancel the subscription for customer with id "Id-0"
+<!-- @@@SNIPEND -->

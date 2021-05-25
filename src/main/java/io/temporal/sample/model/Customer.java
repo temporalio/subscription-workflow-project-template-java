@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-// @@@SNIPSTART subscription-workflow-project-template-java-customer-model
+// @@@SNIPSTART subscription-java-customer-model
 package io.temporal.sample.model;
 
 public class Customer {

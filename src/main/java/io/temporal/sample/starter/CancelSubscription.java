@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-// @@@SNIPSTART subscription-workflow-project-template-java-cancel-subscription
+// @@@SNIPSTART subscription-java-cancel-subscription-signal
 package io.temporal.sample.starter;
 
 import io.temporal.client.WorkflowClient;

@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-// @@@SNIPSTART subscription-workflow-project-template-java-update-billing-cycle-charge
+// @@@SNIPSTART subscription-java-update-billing-cycle-charge-signal
 package io.temporal.sample.starter;
 
 import io.temporal.client.WorkflowClient;
@@ -54,3 +54,4 @@ public class UpdateBillingCycleCharge {
     workflow.updateBillingPeriodChargeAmount(Integer.parseInt(newCharge));
   }
 }
+// @@@SNIPEND

@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-// @@@SNIPSTART subscription-workflow-project-template-java-activity-types-implementation
+// @@@SNIPSTART subscription-java-activity-definition-implementation
 package io.temporal.sample.activities;
 
 import io.temporal.sample.model.Customer;
