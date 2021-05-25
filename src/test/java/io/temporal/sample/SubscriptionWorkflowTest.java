@@ -16,7 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
-// @@@SNIPSTART subscription-workflow-project-template-java-tests
+// @@@SNIPSTART subscription-java-tests
 package io.temporal.sample;
 
 import static org.junit.Assert.assertEquals;
