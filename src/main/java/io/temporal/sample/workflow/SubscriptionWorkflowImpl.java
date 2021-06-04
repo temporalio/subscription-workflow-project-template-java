@@ -109,12 +109,12 @@ public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
   }
 
   @Override
-  public Integer queryBillingPeriodNumber() {
+  public int queryBillingPeriodNumber() {
     return billingPeriodNum;
   }
 
   @Override
-  public Integer queryBillingPeriodChargeAmount() {
+  public int queryBillingPeriodChargeAmount() {
     return customer.getSubscription().getBillingPeriodCharge();
   }
 }

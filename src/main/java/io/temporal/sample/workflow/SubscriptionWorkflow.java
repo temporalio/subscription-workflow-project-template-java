@@ -41,9 +41,9 @@ public interface SubscriptionWorkflow {
   String queryCustomerId();
 
   @QueryMethod
-  Integer queryBillingPeriodNumber();
+  int queryBillingPeriodNumber();
 
   @QueryMethod
-  Integer queryBillingPeriodChargeAmount();
+  int queryBillingPeriodChargeAmount();
 }
 // @@@SNIPEND

@@ -101,16 +101,16 @@ public class SubscriptionWorkflowTest {
     assertEquals("Id-0", workflow.queryCustomerId());
 
     // test initial billing charge amount
-    assertEquals(Integer.valueOf(120), workflow.queryBillingPeriodChargeAmount());
+    assertEquals(120, workflow.queryBillingPeriodChargeAmount());
 
     // test update billing cycle charge
     workflow.updateBillingPeriodChargeAmount(300);
 
     // test query updated billing charge amount
-    assertEquals(Integer.valueOf(300), workflow.queryBillingPeriodChargeAmount());
+    assertEquals(300, workflow.queryBillingPeriodChargeAmount());
 
     // test billing period number
-    assertEquals(Integer.valueOf(0), workflow.queryBillingPeriodNumber());
+    assertEquals(0, workflow.queryBillingPeriodNumber());
 
     // stop execution
     workflow.cancelSubscription();
