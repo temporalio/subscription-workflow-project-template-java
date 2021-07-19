@@ -16,6 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
+
 // @@@SNIPSTART subscription-java-workflow-definition-implementation
 package io.temporal.sample.workflow;
 
@@ -28,9 +29,9 @@ import java.time.Duration;
 /** Subscription Workflow implementation. Note this is just a POJO. */
 public class SubscriptionWorkflowImpl implements SubscriptionWorkflow {
 
-  int billingPeriodNum;
-  boolean subscriptionCancelled;
-  Customer customer;
+  private int billingPeriodNum;
+  private boolean subscriptionCancelled;
+  private Customer customer;
 
   /*
    * Define our Activity options:

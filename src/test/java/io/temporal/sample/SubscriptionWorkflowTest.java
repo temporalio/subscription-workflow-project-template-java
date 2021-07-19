@@ -16,6 +16,7 @@
  *  express or implied. See the License for the specific language governing
  *  permissions and limitations under the License.
  */
+
 // @@@SNIPSTART subscription-java-tests
 package io.temporal.sample;
 
@@ -23,20 +24,16 @@ import static org.junit.Assert.assertEquals;
 
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
+import io.temporal.sample.activities.SubscriptionActivitiesImpl;
 import io.temporal.sample.model.Customer;
 import io.temporal.sample.model.Subscription;
 import io.temporal.sample.starter.SubscriptionWorkflowStarter;
 import io.temporal.sample.workflow.SubscriptionWorkflow;
 import io.temporal.sample.workflow.SubscriptionWorkflowImpl;
-import io.temporal.testing.TestWorkflowEnvironment;
-import io.temporal.worker.Worker;
+import io.temporal.testing.TestWorkflowRule;
 import java.time.Duration;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 
 /**
  * Unit test for {@link io.temporal.sample.workflow.SubscriptionWorkflow}. Doesn't use an external
@@ -45,36 +42,11 @@ import org.junit.runner.Description;
 public class SubscriptionWorkflowTest {
 
   @Rule
-  public TestWatcher watchman =
-      new TestWatcher() {
-        @Override
-        protected void failed(Throwable e, Description description) {
-          if (testEnv != null) {
-            System.err.println(testEnv.getDiagnostics());
-            testEnv.close();
-          }
-        }
-      };
-
-  private TestWorkflowEnvironment testEnv;
-  private Worker worker;
-  private WorkflowClient client;
-
-  @Before
-  public void setUp() {
-    testEnv = TestWorkflowEnvironment.newInstance();
-
-    worker = testEnv.newWorker(SubscriptionWorkflowStarter.TASK_QUEUE);
-    worker.registerWorkflowImplementationTypes(SubscriptionWorkflowImpl.class);
-    testEnv.start();
-
-    client = testEnv.getWorkflowClient();
-  }
-
-  @After
-  public void tearDown() {
-    testEnv.close();
-  }
+  public TestWorkflowRule testWorkflowRule =
+      TestWorkflowRule.newBuilder()
+          .setWorkflowTypes(SubscriptionWorkflowImpl.class)
+          .setActivityImplementations(new SubscriptionActivitiesImpl())
+          .build();
 
   @Test
   public void testSubscription() {
@@ -87,13 +59,15 @@ public class SubscriptionWorkflowTest {
         new Customer("Test", "Subscripber", "Id-0", "test@subscriber.io", subscription);
 
     SubscriptionWorkflow workflow =
-        client.newWorkflowStub(
-            SubscriptionWorkflow.class,
-            WorkflowOptions.newBuilder()
-                .setTaskQueue(SubscriptionWorkflowStarter.TASK_QUEUE)
-                .setWorkflowId(SubscriptionWorkflowStarter.WORKFLOW_ID_BASE + customer.getId())
-                .setWorkflowRunTimeout(Duration.ofMinutes(5))
-                .build());
+        testWorkflowRule
+            .getWorkflowClient()
+            .newWorkflowStub(
+                SubscriptionWorkflow.class,
+                WorkflowOptions.newBuilder()
+                    .setTaskQueue(testWorkflowRule.getTaskQueue())
+                    .setWorkflowId(SubscriptionWorkflowStarter.WORKFLOW_ID_BASE + customer.getId())
+                    .setWorkflowRunTimeout(Duration.ofMinutes(5))
+                    .build());
 
     WorkflowClient.start(workflow::startSubscription, customer);
 
