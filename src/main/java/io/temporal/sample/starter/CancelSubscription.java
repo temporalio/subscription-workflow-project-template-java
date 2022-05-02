@@ -34,7 +34,7 @@ public class CancelSubscription {
      * our locally running Temporal service.
      * Defined here as reused by other starters
      */
-    WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();
+    WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
 
     /*
      * Define the Workflow client. It is a Temporal service client used to start, Signal, and Query
